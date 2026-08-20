@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+        }
+        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; border: none; border-radius: 6px; background: #2575fc; color: white; cursor: pointer; }
+        #result { margin-top: 15px; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>URL Shortener</h2>
+        <p>Paste the URL to be shortened</p>
+        <input type="text" id="urlInput" placeholder="Enter long URL" /><br />
+        <button onclick="shortenUrl()">Shorten</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function shortenUrl() {
+            const url = document.getElementById('urlInput').value;
+            const res = await fetch('/shorten', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            const data = await res.json();
+            document.getElementById('result').innerHTML = data.shortUrl ? 
+                `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>` : 
+                `Error: ${data.error}`;
+        }
+    </script>
+</body>
+</html>
